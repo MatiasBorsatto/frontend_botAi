@@ -2,6 +2,8 @@ const contenedorConversacion = document.querySelector("#conversacion");
 const btnEnviar = document.querySelector("#boton-enviar");
 const input = document.querySelector("#input-prompt");
 
+let messages = [];
+
 btnEnviar.addEventListener("click", async (e) => {
   e.preventDefault();
   console.log(input.value);
@@ -18,6 +20,9 @@ btnEnviar.addEventListener("click", async (e) => {
     </div>
   `;
 
+  messages.push({ role: "user", content: inputValue });
+  console.log(messages);
+
   input.value = "";
 
   try {
@@ -27,7 +32,7 @@ btnEnviar.addEventListener("click", async (e) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        prompt: inputValue,
+        messages,
       }),
     });
 
@@ -40,6 +45,9 @@ btnEnviar.addEventListener("click", async (e) => {
         <p>${data.respuesta}</p>
       </div>
     `;
+
+      messages.push({ role: "model", content: data.respuesta });
+      console.log(messages);
     }
   } catch (error) {
     contenedorConversacion.innerHTML += `
