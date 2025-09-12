@@ -1,17 +1,15 @@
 const contenedorConversacion = document.querySelector("#conversacion");
 const btnEnviar = document.querySelector("#boton-enviar");
 const input = document.querySelector("#input-prompt");
-const checkInput = document.querySelector("#check-input");
-
-checkInput.addEventListener("click", () => {
-  console.log(input.value);
-});
 
 btnEnviar.addEventListener("click", async () => {
   console.log(input.value);
   const inputValue = input.value;
 
-  if (!inputValue.trim()) return;
+  if (!inputValue.trim()){
+    alert("Debe ingresar un prompt")
+    return;
+  }
 
   contenedorConversacion.innerHTML += `
     <div class="mensaje-usuario">
@@ -40,6 +38,7 @@ btnEnviar.addEventListener("click", async () => {
       </div>
     `;
     }
+
   } catch (error) {
     contenedorConversacion.innerHTML += `
       <div class="mensaje-error">
@@ -49,6 +48,8 @@ btnEnviar.addEventListener("click", async () => {
     console.error("Error: ", error);
   }
 
-  input.value = "";
+  inputValue.textContent = "";
+
+
   contenedorConversacion.scrollTop = contenedorConversacion.scrollHeight;
 });
