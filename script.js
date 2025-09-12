@@ -2,12 +2,13 @@ const contenedorConversacion = document.querySelector("#conversacion");
 const btnEnviar = document.querySelector("#boton-enviar");
 const input = document.querySelector("#input-prompt");
 
-btnEnviar.addEventListener("click", async () => {
+btnEnviar.addEventListener("click", async (e) => {
+  e.preventDefault();
   console.log(input.value);
   const inputValue = input.value;
 
-  if (!inputValue.trim()){
-    alert("Debe ingresar un prompt")
+  if (!inputValue.trim()) {
+    alert("Debe ingresar un prompt");
     return;
   }
 
@@ -16,6 +17,8 @@ btnEnviar.addEventListener("click", async () => {
       <p>${inputValue}</p>
     </div>
   `;
+
+  input.value = "";
 
   try {
     const res = await fetch("https://backend-bot-ai.vercel.app/api", {
@@ -38,7 +41,6 @@ btnEnviar.addEventListener("click", async () => {
       </div>
     `;
     }
-
   } catch (error) {
     contenedorConversacion.innerHTML += `
       <div class="mensaje-error">
@@ -47,9 +49,6 @@ btnEnviar.addEventListener("click", async () => {
     `;
     console.error("Error: ", error);
   }
-
-  inputValue.textContent = "";
-
 
   contenedorConversacion.scrollTop = contenedorConversacion.scrollHeight;
 });
