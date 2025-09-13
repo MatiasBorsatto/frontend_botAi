@@ -2,12 +2,15 @@ const contenedorConversacion = document.querySelector("#conversacion");
 const btnEnviar = document.querySelector("#boton-enviar");
 const input = document.querySelector("#input-prompt");
 
-btnEnviar.addEventListener("click", async () => {
+let messages = [];
+
+btnEnviar.addEventListener("click", async (e) => {
+  e.preventDefault();
   console.log(input.value);
   const inputValue = input.value;
 
-  if (!inputValue.trim()){
-    alert("Debe ingresar un prompt")
+  if (!inputValue.trim()) {
+    alert("Debe ingresar un prompt");
     return;
   }
 
@@ -17,6 +20,11 @@ btnEnviar.addEventListener("click", async () => {
     </div>
   `;
 
+  messages.push({ role: "user", content: inputValue });
+  console.log(messages);
+
+  input.value = "";
+
   try {
     const res = await fetch("https://backend-bot-ai.vercel.app/api", {
       method: "POST",
@@ -24,7 +32,7 @@ btnEnviar.addEventListener("click", async () => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        prompt: inputValue,
+        messages,
       }),
     });
 
@@ -37,6 +45,9 @@ btnEnviar.addEventListener("click", async () => {
         <p>${data.respuesta}</p>
       </div>
     `;
+
+      messages.push({ role: "model", content: data.respuesta });
+      console.log(messages);
     }
 
   } catch (error) {
@@ -47,9 +58,6 @@ btnEnviar.addEventListener("click", async () => {
     `;
     console.error("Error: ", error);
   }
-
-  inputValue.textContent = "";
-
-
+  
   contenedorConversacion.scrollTop = contenedorConversacion.scrollHeight;
 });
