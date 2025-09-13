@@ -49,7 +49,6 @@ btnEnviar.addEventListener("click", async (e) => {
       messages.push({ role: "model", content: data.respuesta });
       console.log(messages);
     }
-
   } catch (error) {
     contenedorConversacion.innerHTML += `
       <div class="mensaje-error">
@@ -58,6 +57,4 @@ btnEnviar.addEventListener("click", async (e) => {
     `;
     console.error("Error: ", error);
   }
-  
-  contenedorConversacion.scrollTop = contenedorConversacion.scrollHeight;
 });
