@@ -1,6 +1,7 @@
 const contenedorConversacion = document.querySelector("#conversacion");
 const btnEnviar = document.querySelector("#boton-enviar");
 const input = document.querySelector("#input-prompt");
+const modelos = document.querySelector("#modelos");
 
 let messages = [];
 
@@ -25,36 +26,91 @@ btnEnviar.addEventListener("click", async (e) => {
 
   input.value = "";
 
-  try {
-    const res = await fetch("https://backend-bot-ai.vercel.app/api", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        messages,
-      }),
-    });
+  switch (modelos.value) {
+    case "gemini":
+      {
+        try {
+          const res = await fetch(
+            "https://backend-bot-ai.vercel.app/api/gemini",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                messages,
+              }),
+            }
+          );
 
-    const data = await res.json();
+          const data = await res.json();
 
-    if (res.ok) {
-      console.log(data);
-      contenedorConversacion.innerHTML += `
+          if (res.ok) {
+            console.log(data);
+            contenedorConversacion.innerHTML += `
       <div class="mensaje-bot">
         <p>${data.respuesta}</p>
       </div>
     `;
 
-      messages.push({ role: "model", content: data.respuesta });
-      console.log(messages);
-    }
-  } catch (error) {
-    contenedorConversacion.innerHTML += `
+            messages.push({
+              role: "model",
+              content: data.respuesta,
+            });
+            console.log(messages);
+            console.log("Esto es gemini");
+          }
+        } catch (error) {
+          contenedorConversacion.innerHTML += `
       <div class="mensaje-error">
         <p>Error en la consulta: ${error.message}</p>
       </div>
     `;
-    console.error("Error: ", error);
+          console.error("Error: ", error);
+        }
+      }
+      break;
+
+    case "deepseek": {
+      try {
+        const res = await fetch(
+          "https://backend-bot-ai.vercel.app/api/deepseek",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              messages,
+            }),
+          }
+        );
+
+        const data = await res.json();
+
+        if (res.ok) {
+          console.log(data);
+          contenedorConversacion.innerHTML += `
+      <div class="mensaje-bot">
+        <p>${data.respuesta}</p>
+      </div>
+    `;
+
+          messages.push({
+            role: "assistant",
+            content: data.raw,
+          });
+          console.log(messages);
+          console.log("Esto es deepseek");
+        }
+      } catch (error) {
+        contenedorConversacion.innerHTML += `
+      <div class="mensaje-error">
+        <p>Error en la consulta: ${error.message}</p>
+      </div>
+    `;
+        console.error("Error: ", error);
+      }
+    }
   }
 });
