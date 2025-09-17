@@ -1,11 +1,37 @@
+:root {
+    --color-fondo:#212121;
+    --primarioOscuro:#af9c8b;
+    --secundario:#505050;
+    --secundarioOscuro: #000000;
+    --blanco: #FFF;
+    --negro:#000;
+
+    --fuentePrincipal: "Staatliches", cursive;  
+}
+
+
+html {
+  box-sizing: border-box;
+}
+
+*, *:before, *:after {
+  box-sizing: border-box;
+} 
+
 body{
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    background-color: lightslategray;
+    background-color: var(--negro);
 }
 
+hr {
+  border: var(--negro) 0.13rem solid; /* Elimina el borde por defecto */
+
+  
+ 
+}
 .contenedor{
     display: flex;
     flex-direction: column;
@@ -15,23 +41,99 @@ body{
 
 #boton-enviar{
     border-radius: 1rem;
-    color: white;
-    background-color: darkblue;
+    color: var(--blanco);
+    background-color: #0d19c5;
     padding: 0.5rem;
+    border-color: var(--blanco);
 }
 
 #boton-enviar:hover {
-    box-shadow: 0 0.1rem 0.7rem black;
-    background-color: aqua;
-    color: black;
+    box-shadow: 0 0.1rem 0.7rem var(--negro);
+    background-color: #77cccc;
+    color: var(--blanco);
+    cursor: pointer;
 }
 
 #input-prompt{
     padding: 0.5rem;
-    border: solid black;
+    border: solid var(--negro);
     border-radius: 1rem;
 }
 
 #input-prompt:hover{
-    box-shadow: 0 0.1rem 0.7rem black;
+    box-shadow: 0 0.1rem 0.7rem var(--blanco);
+}
+
+#input-prompt:focus{
+    height: 2.9rem;
+    border-color: #2c8cb9;
+    outline: none;
+    transition: border-color 0.5s;
+}
+
+.titulo {
+    animation: myAnim 2.4s ease 0s 1 normal forwards;
+    font-size: 5rem;
+    margin-bottom: 0;
+    color: var(--blanco);
+}
+
+@keyframes myAnim {
+	0% {
+		animation-timing-function: ease-in;
+		opacity: 0;
+		transform: translateX(-25rem);
+	}
+
+	38% {
+		animation-timing-function: ease-out;
+		opacity: 1;
+		transform: translateX(0);
+	}
+
+	55% {
+		animation-timing-function: ease-in;
+		transform: translateX(-6.8rem);
+	}
+
+	72% {
+		animation-timing-function: ease-out;
+		transform: translateX(0);
+	}
+
+	81% {
+		animation-timing-function: ease-in;
+		transform: translateX(-2.8rem);
+	}
+
+	90% {
+		animation-timing-function: ease-out;
+		transform: translateX(0);
+	}
+
+	95% {
+		animation-timing-function: ease-in;
+		transform: translateX(-.8rem);
+	}
+
+	100% {
+		animation-timing-function: ease-out;
+		transform: translateX(0);
+	}
+}
+
+.titulo__ia {
+    background: linear-gradient(to right, #0d19c5, #2c8cb9, #77cccc); /* Define los colores del degradado */
+    -webkit-text-fill-color: transparent;
+    -webkit-background-clip: text;
+    color: transparent;
+}
+
+p{
+    font-size: 1.5rem;
+    color: var(--blanco);
+}
+
+.titulo__pregunta {
+    font-size: 2rem;
 }
