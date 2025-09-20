@@ -12,6 +12,8 @@
 
 html {
   box-sizing: border-box;
+  font-size: 1.5rem;
+  color: var(--blanco);
 }
 
 *, *:before, *:after {
@@ -129,10 +131,7 @@ hr {
     color: transparent;
 }
 
-p{
-    font-size: 1.5rem;
-    color: var(--blanco);
-}
+
 
 .titulo__pregunta {
     font-size: 2rem;
