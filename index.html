@@ -5,21 +5,76 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="normalize.css">
+    <link rel="icon" type="image/x-icon" href="assests/img/logo con fondo bordeado.png">
     <title>Bot Ai</title>
 </head>
 <body>
     <div class="contenedor">
-        <h1 class="titulo">Bienvenido a <b>Aur<span class="titulo__ia">AI</span></b>!</h1>
-    <p class="titulo__pregunta">¿Que tema tratamos hoy?</p>
-       
-    <div id="conversacion"></div>
+        <main> 
+            <header class="chat-header">
+                <div class="header-left">
+                    <button class="btn btn-ghost btn-icon" id="toggleSideBtn">
+                       <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="3" y1="12" x2="21" y2="12"></line>
+                            <line x1="3" y1="6" x2="21" y2="6"></line>
+                            <line x1="3" y1="18" x2="21" y2="18"></line>
+                        </svg> 
+                    </button>
+                    <div class="assistant-info">
+                        <div class="avatar avatar-bot">
+                           <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                            </svg> 
+                        </div>
+                        <div>
+                            <h2 class="assistant-name">AurAI Asssistant</h2>
+                            <p class="assistant-status">
+                                <span class="status-dot"></span>
+                                En línea • Modelo Gemini
+                            </p>
+                        </div>
+                    </div>
+                    <div class="header-right">
+                        <button class="btn btn-ghost btn-icon"> 
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="3"></circle>
+                                <path d="M12 1v6m0 6v6m5.2-13.2 4.2-4.2m-4.2 4.2-4.2-4.2m13.2 5.2h-6m-6 0H1m13.2 5.2 4.2 4.2m-4.2-4.2-4.2 4.2"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </header>
 
-    <form>
-        <input type="text" placeholder="Ingrese su prompt" id="input-prompt">
-        <button id="boton-enviar">Enviar</button>
-    </form>
-
-    <script src="script.js"></script>
+            <!-- Mensaje -->
+             <div class="messages-container" id="messagesContainer">
+                <div class="messages-wrapper">
+                    <!-- mensaje inicial -->
+                     <div class="message message-assistant">
+                        <div class="avatar avatar-bot">
+                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                            </svg>
+                        </div>
+                        <div class="message-bubble message-bubble-assistant">
+                            ¡Hola! Soy tu asistente de AuraAI. ¿En que puedo ayudarte hoy?
+                        </div>
+                     </div>
+                </div>
+             </div>
+            <!-- <h1 class="titulo">Bienvenido a <b>Aur<span class="titulo__ia">AI</span></b>!</h1>
+            <p class="titulo__pregunta">¿Que tema tratamos hoy?</p>
+             -->
+            <div id="conversacion"></div>
+             <div class="form-chat">
+                <form>
+                    <input type="text" placeholder="Ingrese su prompt" id="input-prompt">
+                    <button id="boton-enviar">Enviar</button>
+                </form>
+            </div>    
+        </main>  
+        <script src="script.js"></script>
     </div>
     
 </body>

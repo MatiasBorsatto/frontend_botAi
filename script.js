@@ -16,7 +16,7 @@ btnEnviar.addEventListener("click", async (e) => {
   }
 
   contenedorConversacion.innerHTML += `
-    <div class="mensaje-usuario">
+    <div class="message-bubble message-bubble-user message-user message">
       <p>${inputValue}</p>
     </div>
   `;
@@ -42,7 +42,7 @@ btnEnviar.addEventListener("click", async (e) => {
     if (res.ok) {
       console.log(data);
       contenedorConversacion.innerHTML += `
-      <div class="mensaje-bot">
+      <div class="message-bubble message-bubble-assistant message-assistant message">
         <p>${data.respuesta}</p>
       </div>
     `;
