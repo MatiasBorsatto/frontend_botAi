@@ -27,7 +27,7 @@ btnEnviar.addEventListener("click", async (e) => {
   input.value = "";
 
   try {
-    const res = await fetch("https://backend-bot-ai.vercel.app/api/deepseek", {
+    const res = await fetch(`http://localhost:3000/api/deepseek`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
