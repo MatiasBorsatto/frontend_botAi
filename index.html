@@ -9,8 +9,12 @@
     <title>Bot Ai</title>
 </head>
 <body>
-    <div class="contenedor">
-        <main> 
+    <aside id="contenedor-chats" class="contchat-cerrado">
+                <div class="chat">
+                    <p>Este es un test</p>
+                </div>
+            </aside>
+        <main class="contenedor">
             <header class="chat-header">
                 <div class="header-left">
                     <button class="btn btn-ghost btn-icon" id="toggleSideBtn">
@@ -22,12 +26,9 @@
                     </button>
                     <div class="assistant-info">
                         <div class="avatar avatar-bot">
-                           <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-                                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-                            </svg> 
+                           <img src="./assests/img/logo_sin_fondo.png" alt="">
                         </div>
-                        <div>
+                        <div class="titulos">
                             <h2 class="assistant-name">AurAI Asssistant</h2>
                             <p class="assistant-status">
                                 <span class="status-dot"></span>
@@ -51,31 +52,33 @@
                 <div class="messages-wrapper">
                     <!-- mensaje inicial -->
                      <div class="message message-assistant">
-                        <div class="avatar avatar-bot">
-                            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-                                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-                            </svg>
+
+                        <div class="estructura-message">
+
+                            <div class="avatar avatar-bot">
+                                <img src="assests/img/bot-svgrepo-com.svg" alt="">
+                            </div>
+
+                            <div class="message-bubble message-bubble-assistant">
+                                ¡Hola! Soy tu asistente de AuraAI. ¿En que puedo ayudarte hoy?
+                            </div>
+
                         </div>
-                        <div class="message-bubble message-bubble-assistant">
-                            ¡Hola! Soy tu asistente de AuraAI. ¿En que puedo ayudarte hoy?
-                        </div>
+                        
                      </div>
                 </div>
              </div>
             <!-- <h1 class="titulo">Bienvenido a <b>Aur<span class="titulo__ia">AI</span></b>!</h1>
             <p class="titulo__pregunta">¿Que tema tratamos hoy?</p>
              -->
-            <div id="conversacion"></div>
              <div class="form-chat">
                 <form>
                     <input type="text" placeholder="Ingrese su prompt" id="input-prompt">
-                    <button id="boton-enviar" type="submit">Enviar</button>
+                    <button id="boton-enviar" type="submit"><p>Enviar</p></button>
                 </form>
             </div>    
         </main>  
         <script src="script.js"></script>
-    </div>
     
 </body>
 </html>

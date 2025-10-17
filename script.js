@@ -1,7 +1,10 @@
-const contenedorConversacion = document.querySelector("#conversacion");
+const contenedorConversacion = document.querySelector(".messages-wrapper");
 const btnEnviar = document.querySelector("#boton-enviar");
 const input = document.querySelector("#input-prompt");
 const modelos = document.querySelector("#modelos");
+const btnSlide = document.querySelector("#toggleSideBtn");
+const contChats = document.querySelector("#contenedor-chats");
+const body = document.body;
 const context = `Sos un asistente conversacional amigable y experto en gestion de contactos.
 
 COMPORTAMIENTO DUAL
@@ -107,6 +110,11 @@ let messages = [
   },
 ];
 
+btnSlide.addEventListener("click", () => {
+  const abierto = body.classList.toggle("expandido");
+  contChats.classList.toggle("contchat-abierto", abierto);
+});
+
 btnEnviar.addEventListener("click", async (e) => {
   e.preventDefault();
   console.log(input.value);
@@ -118,10 +126,28 @@ btnEnviar.addEventListener("click", async (e) => {
   }
 
   contenedorConversacion.innerHTML += `
-    <div class="message-bubble message-bubble-user message-user message">
-      <p>${inputValue}</p>
+  <div class="message message-user">
+    <div class="estructura-message">
+      <div class="message-bubble message-bubble-user">
+        ${inputValue}
+      </div>
+      <div class="avatar avatar-user">
+      <img src="assests/img/user-svgrepo-com.svg" alt="">
+      </div>
     </div>
+  </div>
   `;
+
+  function scrollToBottom() {
+    const container = document.getElementById("messagesContainer");
+    container.scrollTo({
+      top: container.scrollHeight,
+      behavior: "smooth",
+    });
+  }
+
+  // Cada vez que agregues un mensaje, llamá a:
+  scrollToBottom();
 
   messages.push({ role: "user", content: inputValue });
   console.log(messages);
@@ -159,10 +185,20 @@ btnEnviar.addEventListener("click", async (e) => {
       }
 
       contenedorConversacion.innerHTML += `
-      <div class="message-bubble message-bubble-assistant message-assistant message">
-        <p>${mensajeParaMostrar}</p>
-      </div>
-    `;
+        <div class="message message-assistant">
+          <div class="estructura-message">
+            <div class="avatar avatar-bot">
+              <img src="assests/img/bot-svgrepo-com.svg" alt="">
+            </div>
+            <div class="message-bubble message-bubble-assistant">
+              ${mensajeParaMostrar}
+            </div>
+          </div>
+        </div>
+      `;
+
+      // Cada vez que agregues un mensaje, llamá a:
+      scrollToBottom();
 
       messages.push({
         role: "assistant",

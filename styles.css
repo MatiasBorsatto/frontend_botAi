@@ -5,6 +5,7 @@
     --card: #fafafa;
     --card-foreground: #262626;
     --primary: #7c3aed;
+    --primaryDetail: #a57deb;
     --primary-foreground: #fcfcfc;
     --secondary: #f3f4f6;
     --secondary-foreground: #404040;
@@ -13,6 +14,7 @@
     --border: #e5e5e5;
     --input: #fafafa;
     --ring: #7c3aed;
+    --shadow: #888888;
 
     /* Gradients */
   --gradient-primary: linear-gradient(135deg, #7c3aed 0%, #a855f7 100%);
@@ -24,7 +26,6 @@
     --secundarioOscuro: #000000;
     --blanco: #FFF;
     --negro:#000;
-
     --fuentePrincipal: "Staatliches", cursive;  
 }
 
@@ -33,18 +34,24 @@ html {
   box-sizing: border-box;
   font-size: 1.5rem;
   color: var(--blanco);
+  transition: .5s;
 }
 
 *, *:before, *:after {
   box-sizing: border-box;
 } 
 
+p{
+  margin: 0;
+}
+
 body{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    background-color: var(--foreground);
+  margin: 0;
+  height: 100vh;
+  display: grid;
+  grid-template-columns: var(--ancho-aside, 0px) 1fr; /* aside + main */
+  transition: grid-template-columns 0.5s ease; /* animación fluida */
+  overflow: hidden; /* sin scroll horizontal */
 }
 
 hr {
@@ -54,43 +61,62 @@ hr {
 div{
   margin-bottom: 0.5rem;
 }
-.contenedor{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100vw;
+
+main {
+  background-color: #1e1e1e;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+form{
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  width: 50%;
 }
 
 #boton-enviar{
     border-radius: 1rem;
     color: var(--blanco);
     background-color: var(--primary);
-    padding: 0.5rem;
-    border-color: var(--blanco);
+    padding: .5rem;
+    border: none;
+    height: 2rem;
+    width: 4rem;
+    transition: .3s;
+}
+
+#boton-enviar p{
+  font-size: large;
 }
 
 #boton-enviar:hover {
-    box-shadow: 0 0.1rem 0.7rem var(--negro);
-    background-color: #77cccc;
+    box-shadow: 0 0.1rem 0.7rem var(--primaryDetail);
     color: var(--blanco);
     cursor: pointer;
 }
 
 #input-prompt{
     padding: 0.5rem;
-    border: solid var(--primary);
-    border-radius: 1rem;
+    border: solid var(--primaryDetail);
+    border-radius: .8rem;
     background-color: var(--secundario);
     color: var(--blanco);
+    width: 100%;
+    height: 2rem;
+    transition: .3s;
 }
 
 #input-prompt:hover{
-    box-shadow: 0 0.1rem 0.4rem var(--primary-foreground);
+    transition: .3s;
+    box-shadow: 0 0.1rem 0.4rem var(--primaryDetail);
     
 }
 
 #input-prompt:focus{
-    height: 2.5rem;
+    height: 2rem;
     border-color: var(--ring);
     outline: none;
     transition: border-color 0.5s;
@@ -256,7 +282,7 @@ div{
 .avatar-user {
   background: var(--gradient-primary);
   color: var(--primary-foreground);
-  border: 2px solid rgba(124, 58, 237, 0.2);
+  margin: 0;
 }
 
 .avatar-bot {
@@ -264,6 +290,11 @@ div{
   color: var(--primary-foreground);
   border: 2px solid rgba(124, 58, 237, 0.3);
   box-shadow: 0 0 20px rgba(124, 58, 237, 0.08);
+  margin: 0;
+}
+
+.avatar img{
+  width: 2rem;
 }
 
 .avatar .icon {
@@ -284,12 +315,12 @@ div{
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1rem;
+  padding: .5rem;
   border-bottom: 0.1rem solid var(--border);
   backdrop-filter: blur(2re);
   background: rgba(250, 250, 250, 0.7);
   width: 100vw;
-  height: 6rem;
+  height: 4rem;
   padding-top: 1.5rem;
 }
 
@@ -297,19 +328,22 @@ div{
 .header-right {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 1rem;
 }
 
 .assistant-info {
   display: flex;
-  align-items: center;
   gap: 1rem;
+  align-items: center;
+  justify-content: center;
 }
 
 .assistant-name {
   font-size: 1.125rem;
   font-weight: 700;
   color: var(--card-foreground);
+  margin: 0;
 }
 
 .assistant-status {
@@ -339,19 +373,22 @@ div{
   }
 }
 
-/* Messages Container */
 .messages-container {
-  flex: 1;
-  overflow-y: auto;
-  padding: 1rem;
+  height: 720px;          /* altura fija */
+  overflow-y: auto;       /* scroll vertical */
+  display: flex;
+  flex-direction: column;
+  padding: 2rem 0;
 }
 
 .messages-wrapper {
+  width: 100%;
   max-width: 1024px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+  flex-shrink: 0;         /* evita que se comprima */
 }
 
 /* Messages */
@@ -359,10 +396,24 @@ div{
   display: flex;
   gap: 1rem;
   animation: messageSlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  flex-direction: column;
+}
+
+.estructura-message{
+  display: flex;
+  flex-direction: row-reverse;
+  gap: 1rem;
+  width: 100%;
+  align-items: center;
 }
 
 .message-user {
-  justify-content: flex-end;
+  width: 100%;
+  display: flex;
+  flex-direction: row-reverse; /* burbuja a la derecha */
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
 }
 
 .message-assistant {
@@ -376,17 +427,18 @@ div{
   width: fit-content;
   height: auto;
   border-radius: 1rem;
-  padding: 1.25rem;
+  padding: .5rem 1rem .5rem 1rem;
   font-size: 0.875rem;
   line-height: 1.6;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  word-break: break-word;
 }
 
 .message-bubble-user {
   background: var(--gradient-primary);
   color: var(--primary-foreground);
-  margin-left: 3rem;
   box-shadow: 0 0 20px rgba(124, 58, 237, 0.08);
+  margin: 0;
 }
 
 .message-bubble-assistant {
@@ -550,4 +602,50 @@ div{
   .message-bubble {
     max-width: 90%;
   }
+}
+
+#contenedor-chats {
+  background-color: #111;
+  color: white;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.5s ease;
+}
+
+#contenedor-chats > * {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+#contenedor-chats.contchat-abierto {
+  width: 350px;
+}
+
+#contenedor-chats.contchat-abierto > * {
+  opacity: 1;
+}
+
+body.expandido {
+  --ancho-aside: 350px; /* Cambia el tamaño del panel lateral */
+}
+
+#toggleSideBtn {
+  position: relative;
+  z-index: 1001; /* mayor que el aside */
+}
+
+.message-assistant .estructura-message {
+  flex-direction: row; /* burbuja a la izquierda */
+  justify-content: flex-start;
+  gap: 1rem;
+}
+
+.titulos{
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
