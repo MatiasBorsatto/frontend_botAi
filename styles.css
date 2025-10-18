@@ -32,7 +32,7 @@
 
 html {
   box-sizing: border-box;
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   color: var(--blanco);
   transition: .5s;
 }
@@ -75,6 +75,20 @@ form{
   justify-content: center;
   gap: 1rem;
   width: 50%;
+}
+
+code{
+  font-size: small;
+}
+
+pre {
+  /* 1. Anula el comportamiento 'no-wrap' */
+  white-space: pre-wrap;
+  
+  /* 2. Permite que las palabras (o cadenas) se rompan si son demasiado largas */
+  word-break: break-all; 
+  /* Nota: también puedes usar word-wrap: break-word; o overflow-wrap: break-word; 
+     dependiendo del efecto exacto que prefieras */
 }
 
 #boton-enviar{
@@ -382,8 +396,7 @@ form{
 }
 
 .messages-wrapper {
-  width: 100%;
-  max-width: 1024px;
+  width: 80%;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
@@ -423,6 +436,7 @@ form{
 .message-bubble {
   display: flex; 
   justify-content: flex-end;
+  flex-direction: column;
   max-width: 80%;
   width: fit-content;
   height: auto;
