@@ -176,8 +176,7 @@ btnEnviar.addEventListener("click", async (e) => {
         if (typeof esJSON === "object") {
           console.log("Soy un objeto");
           if (data.contacto.length > 0) {
-            const arrayNombres = data.contacto.map((c) => c.name); // --> ["Juan", "Maria", ...]
-
+            const arrayNombres = data.contacto.map((c) => c.name);
             console.log(arrayNombres);
             mensajeParaMostrar = `Estos son los contactos que hay almacenados hasta el momento: ${arrayNombres.join(
               ", "
