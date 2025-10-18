@@ -177,7 +177,7 @@ btnEnviar.addEventListener("click", async (e) => {
         if (typeof esJSON === "object") {
           // Si es JSON, usar la respuesta raw directamente
           mensajeParaMostrar =
-            "Contacto guardado con exito! ¿Necesita alguna otra cosa?";
+            "Las operación termino exitosamente! ¿Necesita alguna otra cosa?";
           messages.push({ role: "assistant", content: mensajeParaMostrar });
         }
       } catch (e) {
