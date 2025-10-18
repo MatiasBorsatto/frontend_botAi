@@ -173,12 +173,21 @@ btnEnviar.addEventListener("click", async (e) => {
       let mensajeParaMostrar = data.respuesta;
       try {
         const esJSON = data.raw;
-        console.log("data.raw: " + data.raw);
         if (typeof esJSON === "object") {
-          // Si es JSON, usar la respuesta raw directamente
-          mensajeParaMostrar =
-            "Las operación termino exitosamente! ¿Necesita alguna otra cosa?";
-          messages.push({ role: "assistant", content: mensajeParaMostrar });
+          console.log("Soy un objeto");
+          if (data.contacto.length > 0) {
+            const arrayNombres = data.contacto.map((c) => c.name); // --> ["Juan", "Maria", ...]
+
+            console.log(arrayNombres);
+            mensajeParaMostrar = `Estos son los contactos que hay almacenados hasta el momento: ${arrayNombres.join(
+              ", "
+            )}`;
+            messages.push({ role: "assistant", content: mensajeParaMostrar });
+          } else {
+            mensajeParaMostrar =
+              "Las operación termino exitosamente! ¿Necesita alguna otra cosa?";
+            messages.push({ role: "assistant", content: mensajeParaMostrar });
+          }
         }
       } catch (e) {
         // Si no es JSON, mantener data.respuesta
