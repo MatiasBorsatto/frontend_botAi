@@ -155,7 +155,7 @@ btnEnviar.addEventListener("click", async (e) => {
   input.value = "";
 
   try {
-    const res = await fetch(`http://localhost:3000/api/deepseek`, {
+    const res = await fetch(`http://localhost:3000/api/prompt`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
