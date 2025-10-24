@@ -132,7 +132,7 @@ btnEnviar.addEventListener("click", async (e) => {
         ${inputValue}
       </div>
       <div class="avatar avatar-user">
-      <img src="assests/img/user-svgrepo-com.svg" alt="">
+      <img src="../assests/img/user-svgrepo-com.svg" alt="">
       </div>
     </div>
   </div>
@@ -188,7 +188,7 @@ btnEnviar.addEventListener("click", async (e) => {
         <div class="message message-assistant">
           <div class="estructura-message">
             <div class="avatar avatar-bot">
-              <img src="assests/img/bot-svgrepo-com.svg" alt="">
+              <img src="../assests/img/bot-svgrepo-com.svg" alt="">
             </div>
             <div class="message-bubble message-bubble-assistant">
               ${mensajeParaMostrar}
