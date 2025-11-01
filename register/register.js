@@ -32,8 +32,7 @@ login.addEventListener("submit", async (e) => {
 
   if (data.mensaje === "Usuario registrado correctamente") {
     alert(data.mensaje);
-    window.location.href = "../login/login.html";
-    console.log(data);
+    return (window.location.href = "../login/login.html");
   }
 
   if (data.error) {
