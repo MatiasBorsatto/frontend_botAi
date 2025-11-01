@@ -5,6 +5,9 @@ const modelos = document.querySelector("#modelos");
 const btnSlide = document.querySelector("#toggleSideBtn");
 const contChats = document.querySelector("#contenedor-chats");
 const body = document.body;
+const userBtn = document.getElementById("userBtn");
+const dropdown = document.getElementById("dropdownMenu");
+const logoutBtn = document.getElementById("logoutBtn");
 const context = `Sos un asistente conversacional amigable y experto en gestion de contactos.
 
 COMPORTAMIENTO DUAL
@@ -212,5 +215,42 @@ btnEnviar.addEventListener("click", async (e) => {
       </div>
     `;
     console.error("Error: ", error);
+  }
+});
+
+// Abrir o cerrar el menú al hacer clic en el botón
+userBtn.addEventListener("click", () => {
+  dropdown.classList.toggle("show");
+});
+
+// Cerrar el menú si se hace clic fuera de él
+document.addEventListener("click", (e) => {
+  if (!e.target.closest(".user-menu")) {
+    dropdown.classList.remove("show");
+  }
+});
+
+// Acción de cerrar sesión
+logoutBtn.addEventListener("click", async () => {
+  try {
+    const res = await fetch("http://localhost:3000/api/guardar-contexto", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ messages }),
+    });
+
+    const data = await res.json();
+
+    console.log(data);
+
+    if (data) {
+      console.log(data);
+
+      window.location.href = "../login/login.html";
+    }
+  } catch (error) {
+    console.error("Error al guardar contexto:", error);
   }
 });

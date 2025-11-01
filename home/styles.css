@@ -31,10 +31,9 @@
     --fuentePrincipal: "Staatliches", cursive;  
 }
 
-
 html {
   box-sizing: border-box;
-  font-size: 1.3rem;
+  font-size: 1.2rem; /* ✅ CAMBIAR de 1.3rem a 1rem */
   color: var(--blanco);
   transition: .5s;
   font-family: "Poppins", sans-serif;
@@ -49,13 +48,13 @@ p{
   margin: 0;
 }
 
-body{
-  margin: 0;
+body {
+   margin: 0;
   height: 100vh;
   display: grid;
-  grid-template-columns: var(--ancho-aside, 0px) 1fr; /* aside + main */
-  transition: grid-template-columns 0.5s ease; /* animación fluida */
-  overflow: hidden; /* sin scroll horizontal */
+  grid-template-columns: var(--ancho-aside, 0px) 1fr;
+  transition: grid-template-columns 0.5s ease;
+  overflow: hidden;
 }
 
 hr {
@@ -68,13 +67,7 @@ main {
   display: flex;
   flex-direction: column;
   overflow: hidden;
-}
-
-form{
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  width: 50%;
+  height: 100vh;
 }
 
 code{
@@ -91,49 +84,54 @@ pre {
      dependiendo del efecto exacto que prefieras */
 }
 
-#boton-enviar{
-    border-radius: 1rem;
-    color: var(--blanco);
-    background-color: var(--primary);
-    padding: .5rem;
-    border: none;
-    height: 2rem;
-    width: 4rem;
-    transition: .3s;
+#boton-enviar {
+  border-radius: 1rem;
+  color: var(--blanco);
+  background-color: var(--primary);
+  padding: .5rem 1rem;
+  border: none;
+  height: 2.5rem; /* ✅ ALTURA FIJA */
+  min-width: 5rem;
+  transition: .3s;
+  flex-shrink: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-#boton-enviar p{
-  font-size: large;
+#boton-enviar p {
+  margin: 0;
+  font-size: 1rem;
 }
 
 #boton-enviar:hover {
-    box-shadow: 0 0.1rem 0.7rem var(--primaryDetail);
-    color: var(--blanco);
-    cursor: pointer;
+  box-shadow: 0 0.1rem 0.7rem var(--primaryDetail);
+  cursor: pointer;
 }
 
-#input-prompt{
-    padding: 0.5rem;
-    border: solid var(--primaryDetail);
-    border-radius: .8rem;
-    background-color: var(--secundario);
-    color: var(--blanco);
-    width: 100%;
-    height: 2rem;
-    transition: .3s;
+#input-prompt {
+  padding: 0.5rem 1rem;
+  border: 2px solid var(--primaryDetail);
+  border-radius: .8rem;
+  background-color: var(--secundario);
+  color: var(--blanco);
+  width: 100%;
+  height: 2.5rem; /* ✅ ALTURA FIJA */
+  transition: .3s;
+  flex: 1;
 }
 
-#input-prompt:hover{
-    transition: .3s;
-    box-shadow: 0 0.1rem 0.4rem var(--primaryDetail);
-    
+
+#input-prompt:hover {
+  transition: .3s;
+  box-shadow: 0 0.1rem 0.4rem var(--primaryDetail);
 }
 
-#input-prompt:focus{
-    height: 2rem;
-    border-color: var(--ring);
-    outline: none;
-    transition: border-color 0.5s;
+#input-prompt:focus {
+  border-color: var(--ring);
+  outline: none;
+  transition: border-color 0.5s;
 }
 
 /* .titulo {
@@ -144,10 +142,24 @@ pre {
 } */
 
 .form-chat {
+  display: block;
+  width: 100%;
+  padding: 1rem 2rem;
+  background-color: #1e1e1e;
+  border-top: 1px solid rgba(229, 229, 229, 0.3);
+  flex-shrink: 0; /* ✅ NUNCA se comprime */
+  position: fixed;
+  bottom: 0;
+}
+
+form {
   display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  max-width: 80%;
+  margin: 0 auto;
 }
 
 /* @keyframes myAnim {
@@ -307,6 +319,10 @@ pre {
   margin: 0;
 }
 
+img{
+  width: 100%;
+}
+
 .avatar img{
   width: 2rem;
 }
@@ -329,12 +345,13 @@ pre {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: .5rem;
+  padding: .5rem 1rem;
   border-bottom: 0.1rem solid var(--border);
-  backdrop-filter: blur(2re);
+  backdrop-filter: blur(2rem);
   background: rgba(250, 250, 250, 0.7);
-  width: 100vw;
-  height: 4rem;
+  width: 100%;
+  height: 4rem; /* ✅ ALTURA FIJA, NO min-height */
+  flex-shrink: 0;
 }
 
 .header-left,
@@ -389,11 +406,14 @@ pre {
 }
 
 .messages-container {
-  height: 720px;          /* altura fija */
-  overflow-y: auto;       /* scroll vertical */
+  flex: 1; /* ✅ Ocupa el espacio restante */
+  overflow-y: auto; /* ✅ Scroll cuando hay muchos mensajes */
+  overflow-x: hidden;
+  padding: 1.5rem 0;
+  min-height: 0; /* ✅ CRÍTICO para que flex funcione */
   display: flex;
   flex-direction: column;
-  padding: 2rem 0;
+  max-height: calc(100dvh - 10rem);
 }
 
 .messages-wrapper {
@@ -402,7 +422,9 @@ pre {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
-  flex-shrink: 0;         /* evita que se comprima */
+  padding-bottom: 1rem;
+  max-height: 20dvh;
+  min-height: 100dvh;
 }
 
 /* Messages */
@@ -664,4 +686,60 @@ body.expandido {
   align-items: center;
   justify-content: center;
   gap: .4rem;
+}
+
+.user-menu {
+  position: relative;
+  display: inline-block;
+}
+
+#userBtn {
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: .5s;
+  width: 3rem;
+  background-color: rgba(250, 250, 250, 0.7);
+}
+
+#userBtn:hover {
+  background-color: #acacac;
+  transition: .5s;
+}
+
+.dropdown {
+  display: none; /* Oculto por defecto */
+  position: absolute;
+  top: 110%; /* Un poco debajo del botón */
+  right: 0;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0px 4px 8px rgba(0,0,0,0.15);
+  padding: 10px;
+  min-width: 130px;
+  transition: .5s;
+}
+
+.dropdown.show {
+  display: block;
+  transition: .5s;
+}
+
+#logoutBtn {
+  background-color: transparent;
+  border: none;
+  width: 100%;
+  height: 2rem;
+  text-align: left;
+  padding: 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: .5s;
+  font-size: small;
+}
+
+#logoutBtn:hover {
+  background-color: #f5f5f5;
 }

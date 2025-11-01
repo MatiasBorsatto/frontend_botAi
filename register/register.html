@@ -10,7 +10,7 @@
 <body>
     <main class="cont-gral">
         <img src="../assests/img/logo_con_fondo_bordeado.png" alt="">
-        <form id="login">
+        <form>
             <div class="input">
                 <label for="">Email</label>
                 <input type="text" placeholder="Ingrese su Email" id="email">
@@ -21,10 +21,14 @@
                 <input type="password" placeholder="Ingrese su Contraseña" id="password">
             </div>
 
-            <button type="submit" id="boton-ingresar">Ingresar</button>
+             <div class="input">
+                <label for="">Repetir contraseña</label>
+                <input type="password" placeholder="Ingrese su Contraseña nuevamente" id="password-again">
+            </div>
+
+            <button type="submit">Registrarse</button>
         </form>
-        <p>Aun no tienes una cuenta? <a href="../register/register.html">Registrate aca!</a></p>
     </main>
-    <script src="login.js"></script>
+    <script src="register.js"></script>
 </body>
 </html>
