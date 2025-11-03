@@ -8,6 +8,7 @@ const body = document.body;
 const userBtn = document.getElementById("userBtn");
 const dropdown = document.getElementById("dropdownMenu");
 const logoutBtn = document.getElementById("logoutBtn");
+const asideChats = document.querySelector(".chat");
 const context = `Sos un asistente conversacional amigable y experto en gestion de contactos.
 
 COMPORTAMIENTO DUAL
@@ -105,6 +106,38 @@ Si el usuario intenta agregar campos adicionales como direccion, empresa, cumple
 Si el usuario proporciona todos los datos necesarios en un solo mensaje, genera el JSON inmediatamente sin preguntar ni confirmar nada.
 
 Nunca inventes datos. Mantene tono amigable en ambos modos excepto al enviar JSON final.`;
+
+const token = localStorage.getItem("token");
+const usuario = localStorage.getItem("usuario");
+
+const obtenerContexto = async () => {
+  if (token) {
+    const traerHistorial = await fetch(
+      "http://localhost:3000/api/obtener-contexto",
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authentication: `Bearer ${token}`,
+          usuario: usuario,
+        },
+      }
+    );
+
+    const dataContexto = await traerHistorial.json();
+    console.log(dataContexto);
+
+    dataContexto.historiales.forEach((c) => {
+      asideChats.innerHTML += `
+        <div>
+          <p>${c.titulo}</p>
+        </div>
+      `;
+    });
+  }
+};
+
+obtenerContexto();
 
 let messages = [
   {
@@ -237,6 +270,7 @@ logoutBtn.addEventListener("click", async () => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        usuario: usuario,
       },
       body: JSON.stringify({ messages }),
     });
@@ -247,7 +281,7 @@ logoutBtn.addEventListener("click", async () => {
 
     if (data) {
       console.log(data);
-
+      localStorage.clear();
       window.location.href = "../login/login.html";
     }
   } catch (error) {
