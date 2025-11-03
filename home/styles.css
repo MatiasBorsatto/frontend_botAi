@@ -423,8 +423,6 @@ img{
   flex-direction: column;
   gap: 1.5rem;
   padding-bottom: 1rem;
-  max-height: 20dvh;
-  min-height: 100dvh;
 }
 
 /* Messages */
