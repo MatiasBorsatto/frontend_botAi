@@ -1,3 +1,7 @@
+body{
+    background-color: rgb(150, 128, 186);
+}
+
 form{
     display: flex;
     justify-content: center;
@@ -7,6 +11,7 @@ form{
     padding: 2rem;
     background-color: rgb(171, 97, 255);
     border-radius: 1rem;
+    border: solid 0.2rem black;
 }
 
 .cont-gral{
@@ -19,10 +24,76 @@ form{
 }
 
 img{
-    width: 20rem;
+    width: 22rem;
+    animation: myAnim 2s ease 0s 1 normal forwards;
 }
+
+@keyframes myAnim {
+	0%,
+	100% {
+		transform: translateX(0%);
+		transform-origin: 50% 50%;
+	}
+
+	15% {
+		transform: translateX(-3rem) rotate(-6deg);
+	}
+
+	30% {
+		transform: translateX(1.5rem) rotate(6deg);
+	}
+
+	45% {
+		transform: translateX(-1.5rem) rotate(-3.6deg);
+	}
+
+	60% {
+		transform: translateX(.9rem) rotate(2.4deg);
+	}
+
+	75% {
+		transform: translateX(-.6rem) rotate(-1.2deg);
+	}
+}
+
+
 
 .input{
     display: inherit;
     flex-direction: column;
+}
+
+label{
+     font-weight: 700; 
+}
+
+input{
+    border-radius: 2rem;
+    border: black 0.13rem solid;
+}
+
+#boton-ingresar{
+    border-radius: 2rem;
+    width: 50%;
+    margin: 0 auto;
+}
+
+#boton-ingresar:hover{
+    box-shadow: 0.4rem 0.4rem 1rem 0.1rem black;
+    transition: .5s;
+    background-color: black;
+    color: white;
+}
+p,a {
+    font-size: 1.5rem;
+}
+a{
+    text-decoration: none;
+    color: blue;
+}
+
+a:hover{
+    transition: .5s;
+    color: rgb(31, 27, 34);
+    font-size: 2rem;
 }
