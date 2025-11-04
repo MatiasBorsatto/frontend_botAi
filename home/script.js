@@ -1,4 +1,5 @@
 const contenedorConversacion = document.querySelector(".messages-wrapper");
+const contenedorConversacion2 = document.querySelector(".messages-container");
 const btnEnviar = document.querySelector("#boton-enviar");
 const input = document.querySelector("#input-prompt");
 const modelos = document.querySelector("#modelos");
@@ -9,6 +10,8 @@ const userBtn = document.getElementById("userBtn");
 const dropdown = document.getElementById("dropdownMenu");
 const logoutBtn = document.getElementById("logoutBtn");
 const asideChats = document.querySelector(".chat");
+const nuevoChat = document.querySelector(".chat-nuevo");
+
 const context = `Sos un asistente conversacional amigable y experto en gestion de contactos.
 
 COMPORTAMIENTO DUAL
@@ -107,44 +110,157 @@ Si el usuario proporciona todos los datos necesarios en un solo mensaje, genera 
 
 Nunca inventes datos. Mantene tono amigable en ambos modos excepto al enviar JSON final.`;
 
+let chatActual = null;
+let dataContextoGlobal = null;
+
 const token = localStorage.getItem("token");
 const usuario = localStorage.getItem("usuario");
 
-const obtenerContexto = async () => {
-  if (token) {
-    const traerHistorial = await fetch(
-      "http://localhost:3000/api/obtener-contexto",
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authentication: `Bearer ${token}`,
-          usuario: usuario,
-        },
-      }
-    );
+let messages = [
+  { role: "system", content: context },
+  {
+    role: "assistant",
+    content: "¡Hola! Soy tu asistente de AuraAI. ¿En qué puedo ayudarte hoy?",
+  },
+];
 
-    const dataContexto = await traerHistorial.json();
-    console.log(dataContexto);
+// ✅ Función para guardar el historial actual
+const guardarHistorialActual = async () => {
+  if (!token || !usuario) return;
 
-    dataContexto.historiales.forEach((c) => {
-      asideChats.innerHTML += `
-        <div>
-          <p>${c.titulo}</p>
-        </div>
-      `;
+  // ✅ Verificar que haya mensajes del usuario (no solo system y assistant inicial)
+  const mensajesUsuario = messages.filter((msg) => msg.role === "user");
+
+  if (mensajesUsuario.length === 0) {
+    console.log("No hay mensajes del usuario para guardar");
+    return;
+  }
+
+  try {
+    const response = await fetch("http://localhost:3000/api/guardar-contexto", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        usuario: usuario,
+      },
+      body: JSON.stringify({
+        messages,
+        id_chat: chatActual,
+      }),
     });
+
+    const data = await response.json();
+
+    // ✅ Si se creó un nuevo chat, actualizar chatActual
+    if (!chatActual && data.id_chat) {
+      chatActual = data.id_chat;
+      console.log("Nuevo chat creado con ID:", chatActual);
+    }
+
+    console.log("Historial guardado:", data);
+    return data;
+  } catch (error) {
+    console.error("Error al guardar historial:", error);
   }
 };
 
-obtenerContexto();
+const obtenerContexto = async () => {
+  if (!token) return;
 
-let messages = [
-  {
-    role: "system",
-    content: context,
-  },
-];
+  const traerHistorial = await fetch(
+    "http://localhost:3000/api/obtener-contexto",
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authentication: `Bearer ${token}`,
+        usuario: usuario,
+      },
+    }
+  );
+
+  const dataContexto = await traerHistorial.json();
+  dataContextoGlobal = dataContexto;
+
+  asideChats.innerHTML = "";
+  dataContexto.historiales.forEach((c) => {
+    const fecha = new Date(c.createdAt);
+    asideChats.innerHTML += `
+        <div class="chat-contenedor" tabindex="0" data-id="${c.id_chat}">
+          <div class="cont-datos">
+            <p class="chat-titulo">${c.titulo}</p>
+            <p class="chat-fecha">${fecha.toLocaleString("es-AR")}</p>
+          </div>
+          
+          <div class="cont-eliminar">
+            <button><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M18 6V16.2C18 17.8802 18 18.7202 17.673 19.362C17.3854 19.9265 16.9265 20.3854 16.362 20.673C15.7202 21 14.8802 21 13.2 21H10.8C9.11984 21 8.27976 21 7.63803 20.673C7.07354 20.3854 6.6146 19.9265 6.32698 19.362C6 18.7202 6 17.8802 6 16.2V6M4 6H20M16 6L15.7294 5.18807C15.4671 4.40125 15.3359 4.00784 15.0927 3.71698C14.8779 3.46013 14.6021 3.26132 14.2905 3.13878C13.9376 3 13.523 3 12.6936 3H11.3064C10.477 3 10.0624 3 9.70951 3.13878C9.39792 3.26132 9.12208 3.46013 8.90729 3.71698C8.66405 4.00784 8.53292 4.40125 8.27064 5.18807L8 6" stroke="#ff5252" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg></button>
+          </div>
+        </div>
+    `;
+  });
+
+  // ✅ Limpieza previa antes de volver a agregar listeners
+  document.querySelectorAll(".chat-contenedor").forEach((chat) => {
+    chat.replaceWith(chat.cloneNode(true)); // elimina listeners antiguos
+  });
+
+  const nuevosChats = document.querySelectorAll(".chat-contenedor");
+
+  nuevosChats.forEach((chat) => {
+    chat.addEventListener("click", () => {
+      const id = chat.dataset.id; // ✅ obtener id_chat correcto
+      const seleccionado = dataContexto.historiales.find(
+        (c) => c.id_chat == id
+      );
+
+      if (!seleccionado) {
+        console.error("No se encontró el chat seleccionado");
+        return;
+      }
+
+      chatActual = seleccionado.id_chat; // ✅ guarda el id del chat abierto
+      console.log("Chat actual:", chatActual);
+
+      mostrarHistorial(seleccionado.historial);
+
+      messages = [
+        { role: "system", content: context },
+        ...seleccionado.historial,
+      ];
+    });
+  });
+};
+
+function mostrarHistorial(historial) {
+  contenedorConversacion.innerHTML = "";
+
+  historial.forEach((msg) => {
+    if (msg.role === "user") {
+      contenedorConversacion.innerHTML += `
+        <div class="message message-user">
+          <div class="estructura-message">
+            <div class="message-bubble message-bubble-user">${msg.content}</div>
+            <div class="avatar avatar-user">
+              <img src="../assests/img/user-svgrepo-com.svg" alt="">
+            </div>
+          </div>
+        </div>`;
+    } else if (msg.role === "assistant") {
+      // ✅ Renderizar directamente el contenido (ya sea HTML o texto)
+      contenedorConversacion.innerHTML += `
+        <div class="message message-assistant">
+          <div class="estructura-message">
+            <div class="avatar avatar-bot">
+              <img src="../assests/img/bot-svgrepo-com.svg" alt="">
+            </div>
+            <div class="message-bubble message-bubble-assistant">${msg.content}</div>
+          </div>
+        </div>`;
+    }
+  });
+}
+
+obtenerContexto();
 
 btnSlide.addEventListener("click", () => {
   const abierto = body.classList.toggle("expandido");
@@ -153,138 +269,160 @@ btnSlide.addEventListener("click", () => {
 
 btnEnviar.addEventListener("click", async (e) => {
   e.preventDefault();
-  console.log(input.value);
-  const inputValue = input.value;
-
-  if (!inputValue.trim()) {
-    alert("Debe ingresar un prompt");
-    return;
-  }
+  const inputValue = input.value.trim();
+  if (!inputValue) return alert("Debe ingresar un prompt");
 
   contenedorConversacion.innerHTML += `
-  <div class="message message-user">
-    <div class="estructura-message">
-      <div class="message-bubble message-bubble-user">
-        ${inputValue}
+    <div class="message message-user">
+      <div class="estructura-message">
+        <div class="message-bubble message-bubble-user">${inputValue}</div>
+        <div class="avatar avatar-user">
+          <img src="../assests/img/user-svgrepo-com.svg" alt="">
+        </div>
       </div>
-      <div class="avatar avatar-user">
-      <img src="../assests/img/user-svgrepo-com.svg" alt="">
-      </div>
-    </div>
-  </div>
-  `;
+    </div>`;
 
-  function scrollToBottom() {
-    const container = document.getElementById("messagesContainer");
-    container.scrollTo({
-      top: container.scrollHeight,
-      behavior: "smooth",
-    });
-  }
-
-  // Cada vez que agregues un mensaje, llamá a:
-  scrollToBottom();
+  contenedorConversacion2.scrollTo({
+    top: contenedorConversacion2.scrollHeight,
+    behavior: "smooth",
+  });
 
   messages.push({ role: "user", content: inputValue });
-  console.log(messages);
-
   input.value = "";
 
   try {
-    const res = await fetch(`http://localhost:3000/api/prompt`, {
+    const res = await fetch("http://localhost:3000/api/prompt", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        messages,
-      }),
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ messages }),
     });
 
     const data = await res.json();
+    let mensajeParaMostrar = data.respuesta;
 
-    if (res.ok) {
-      console.log(data);
-      // Validar si la respuesta del backend es un JSON
-      let mensajeParaMostrar = data.respuesta;
+    // 🧠 Intentar parsear si es un string JSON
+    if (
+      typeof mensajeParaMostrar === "string" &&
+      mensajeParaMostrar.trim().startsWith("{")
+    ) {
       try {
-        const esJSON = data.raw;
-        console.log("data.raw: " + data.raw);
-        if (typeof esJSON === "object") {
-          // Si es JSON, usar la respuesta raw directamente
-          mensajeParaMostrar =
-            "Las operación termino exitosamente! ¿Necesita alguna otra cosa?";
-          messages.push({ role: "assistant", content: mensajeParaMostrar });
-        }
-      } catch (e) {
-        // Si no es JSON, mantener data.respuesta
+        mensajeParaMostrar = JSON.parse(mensajeParaMostrar);
+      } catch {
+        console.warn("No se pudo parsear la respuesta JSON");
       }
-
-      contenedorConversacion.innerHTML += `
-        <div class="message message-assistant">
-          <div class="estructura-message">
-            <div class="avatar avatar-bot">
-              <img src="../assests/img/bot-svgrepo-com.svg" alt="">
-            </div>
-            <div class="message-bubble message-bubble-assistant">
-              ${mensajeParaMostrar}
-            </div>
-          </div>
-        </div>
-      `;
-
-      // Cada vez que agregues un mensaje, llamá a:
-      scrollToBottom();
-
-      messages.push({
-        role: "assistant",
-        content: data.respuesta,
-      });
     }
-  } catch (error) {
+
+    // 🧠 Determinar qué mostrar
+    let contenidoMostrar = "";
+
+    if (mensajeParaMostrar && typeof mensajeParaMostrar === "object") {
+      // ✅ Si es GET y tiene contactos, mostrar lista
+      if (
+        mensajeParaMostrar.operation === "GET" &&
+        mensajeParaMostrar.contacts &&
+        mensajeParaMostrar.contacts.length > 0
+      ) {
+        contenidoMostrar = `
+          <div class="contactos-lista">
+            <p><strong>${
+              mensajeParaMostrar.reason || "Contactos encontrados"
+            }</strong></p>
+            ${mensajeParaMostrar.contacts
+              .map(
+                (contacto, index) => `
+              <div class="contacto-card">
+                <p><strong>#${index + 1}</strong></p>
+                <p>📇 <strong>${contacto.name}</strong></p>
+                <p>📱 ${contacto.phone}</p>
+                <p>📧 ${contacto.email}</p>
+              </div>
+            `
+              )
+              .join("")}
+          </div>
+        `;
+      } else {
+        // ✅ Para otros casos, mostrar solo el reason
+        contenidoMostrar =
+          mensajeParaMostrar.reason || "Operación realizada correctamente";
+      }
+    } else {
+      contenidoMostrar = mensajeParaMostrar;
+    }
+
+    // 🤖 Mostrar mensaje del asistente
     contenedorConversacion.innerHTML += `
-      <div class="mensaje-error">
-        <p>Error en la consulta: ${error.message}</p>
-      </div>
-    `;
-    console.error("Error: ", error);
+      <div class="message message-assistant">
+        <div class="estructura-message">
+          <div class="avatar avatar-bot">
+            <img src="../assests/img/bot-svgrepo-com.svg" alt="">
+          </div>
+          <div class="message-bubble message-bubble-assistant">${contenidoMostrar}</div>
+        </div>
+      </div>`;
+
+    contenedorConversacion2.scrollTo({
+      top: contenedorConversacion2.scrollHeight,
+      behavior: "smooth",
+    });
+
+    // ✅ Guardar el contenido formateado que ve el usuario
+    messages.push({ role: "assistant", content: contenidoMostrar });
+
+    // ✅ Guardar después de cada intercambio
+    await guardarHistorialActual();
+
+    // ✅ Recargar la lista de chats para reflejar cambios
+    await obtenerContexto();
+  } catch (error) {
+    console.error("Error en la consulta:", error);
   }
 });
 
-// Abrir o cerrar el menú al hacer clic en el botón
-userBtn.addEventListener("click", () => {
+// ✅ Guardar solo al cerrar sesión
+logoutBtn.addEventListener("click", async () => {
+  try {
+    await guardarHistorialActual();
+
+    localStorage.clear();
+    window.location.href = "../login/login.html";
+  } catch (error) {
+    console.error("Error al guardar contexto:", error);
+  }
+});
+
+// ✅ Botón usuario: abrir menú
+userBtn.addEventListener("click", (e) => {
+  e.stopPropagation();
   dropdown.classList.toggle("show");
 });
 
-// Cerrar el menú si se hace clic fuera de él
 document.addEventListener("click", (e) => {
   if (!e.target.closest(".user-menu")) {
     dropdown.classList.remove("show");
   }
 });
 
-// Acción de cerrar sesión
-logoutBtn.addEventListener("click", async () => {
-  try {
-    const res = await fetch("http://localhost:3000/api/guardar-contexto", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        usuario: usuario,
-      },
-      body: JSON.stringify({ messages }),
-    });
-
-    const data = await res.json();
-
-    console.log(data);
-
-    if (data) {
-      console.log(data);
-      localStorage.clear();
-      window.location.href = "../login/login.html";
-    }
-  } catch (error) {
-    console.error("Error al guardar contexto:", error);
-  }
+// ✅ Nuevo chat: resetear chatActual
+nuevoChat.addEventListener("click", () => {
+  chatActual = null;
+  messages = [
+    { role: "system", content: context },
+    {
+      role: "assistant",
+      content: "¡Hola! Soy tu asistente de AuraAI. ¿En qué puedo ayudarte hoy?",
+    },
+  ];
+  contenedorConversacion.innerHTML = `
+    <div class="message message-assistant">
+      <div class="estructura-message">
+        <div class="avatar avatar-bot">
+          <img src="../assests/img/bot-svgrepo-com.svg" alt="">
+        </div>
+        <div class="message-bubble message-bubble-assistant">
+          ¡Hola! Soy tu asistente de AuraAI. ¿En qué puedo ayudarte hoy?
+        </div>
+      </div>
+    </div>`;
+  console.log("Nuevo chat iniciado");
 });
