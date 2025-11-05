@@ -26,7 +26,7 @@ Operaciones: GET, POST, PUT, DELETE
 POST PUT - Campos obligatorios:
 1. name (minimo 3 chars)
 2. phone (solo numeros, 7-15 digitos)
-3. email (formato valido con @ y .com)
+3. email (formato valido con @ y .com) -OPCIONAL-
 
 Flujo:
 1. Si el usuario proporciona name, phone y email en un solo mensaje, genera el JSON inmediatamente sin preguntar nada
@@ -358,9 +358,16 @@ btnEnviar.addEventListener("click", async (e) => {
   input.value = "";
 
   try {
+    if (!token) {
+      alert("Token inexistente o expirado, vuelva a iniciar sesion");
+      return (window.location.href = "../login/login.html");
+    }
     const res = await fetch("http://localhost:3000/api/prompt", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Autentication: `Bearer ${token}`,
+      },
       body: JSON.stringify({ messages }),
     });
 
