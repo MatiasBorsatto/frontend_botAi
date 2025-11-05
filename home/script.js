@@ -24,9 +24,9 @@ MODO CRUD
 Operaciones: GET, POST, PUT, DELETE
 
 POST PUT - Campos obligatorios:
-1. name (minimo 2 chars)
+1. name (minimo 3 chars)
 2. phone (solo numeros, 7-15 digitos)
-3. email (formato valido con @)
+3. email (formato valido con @ y .com)
 
 Flujo:
 1. Si el usuario proporciona name, phone y email en un solo mensaje, genera el JSON inmediatamente sin preguntar nada
@@ -128,7 +128,6 @@ let messages = [
 const guardarHistorialActual = async () => {
   if (!token || !usuario) return;
 
-  // ✅ Verificar que haya mensajes del usuario (no solo system y assistant inicial)
   const mensajesUsuario = messages.filter((msg) => msg.role === "user");
 
   if (mensajesUsuario.length === 0) {
@@ -151,7 +150,6 @@ const guardarHistorialActual = async () => {
 
     const data = await response.json();
 
-    // ✅ Si se creó un nuevo chat, actualizar chatActual
     if (!chatActual && data.id_chat) {
       chatActual = data.id_chat;
       console.log("Nuevo chat creado con ID:", chatActual);
@@ -186,29 +184,36 @@ const obtenerContexto = async () => {
   dataContexto.historiales.forEach((c) => {
     const fecha = new Date(c.createdAt);
     asideChats.innerHTML += `
-        <div class="chat-contenedor" tabindex="0" data-id="${c.id_chat}">
-          <div class="cont-datos">
+        <div class="chat-contenedor">
+          <div class="cont-datos" tabindex="0" data-id="${c.id_chat}">
             <p class="chat-titulo">${c.titulo}</p>
             <p class="chat-fecha">${fecha.toLocaleString("es-AR")}</p>
           </div>
-          
           <div class="cont-eliminar">
-            <button><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M18 6V16.2C18 17.8802 18 18.7202 17.673 19.362C17.3854 19.9265 16.9265 20.3854 16.362 20.673C15.7202 21 14.8802 21 13.2 21H10.8C9.11984 21 8.27976 21 7.63803 20.673C7.07354 20.3854 6.6146 19.9265 6.32698 19.362C6 18.7202 6 17.8802 6 16.2V6M4 6H20M16 6L15.7294 5.18807C15.4671 4.40125 15.3359 4.00784 15.0927 3.71698C14.8779 3.46013 14.6021 3.26132 14.2905 3.13878C13.9376 3 13.523 3 12.6936 3H11.3064C10.477 3 10.0624 3 9.70951 3.13878C9.39792 3.26132 9.12208 3.46013 8.90729 3.71698C8.66405 4.00784 8.53292 4.40125 8.27064 5.18807L8 6" stroke="#ff5252" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg></button>
+            <button class="btn-eliminar" data-id="${c.id_chat}">
+              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                <g id="SVGRepo_iconCarrier">
+                  <path d="M18 6V16.2C18 17.8802 18 18.7202 17.673 19.362C17.3854 19.9265 16.9265 20.3854 16.362 20.673C15.7202 21 14.8802 21 13.2 21H10.8C9.11984 21 8.27976 21 7.63803 20.673C7.07354 20.3854 6.6146 19.9265 6.32698 19.362C6 18.7202 6 17.8802 6 16.2V6M4 6H20M16 6L15.7294 5.18807C15.4671 4.40125 15.3359 4.00784 15.0927 3.71698C14.8779 3.46013 14.6021 3.26132 14.2905 3.13878C13.9376 3 13.523 3 12.6936 3H11.3064C10.477 3 10.0624 3 9.70951 3.13878C9.39792 3.26132 9.12208 3.46013 8.90729 3.71698C8.66405 4.00784 8.53292 4.40125 8.27064 5.18807L8 6" stroke="#ff5252" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                </g>
+              </svg>
+            </button>
           </div>
         </div>
     `;
   });
 
-  // ✅ Limpieza previa antes de volver a agregar listeners
-  document.querySelectorAll(".chat-contenedor").forEach((chat) => {
-    chat.replaceWith(chat.cloneNode(true)); // elimina listeners antiguos
+  // ✅ Agregar listeners para seleccionar chats
+  document.querySelectorAll(".cont-datos").forEach((chat) => {
+    chat.replaceWith(chat.cloneNode(true));
   });
 
-  const nuevosChats = document.querySelectorAll(".chat-contenedor");
+  const nuevosChats = document.querySelectorAll(".cont-datos");
 
   nuevosChats.forEach((chat) => {
     chat.addEventListener("click", () => {
-      const id = chat.dataset.id; // ✅ obtener id_chat correcto
+      const id = chat.dataset.id;
       const seleccionado = dataContexto.historiales.find(
         (c) => c.id_chat == id
       );
@@ -218,7 +223,7 @@ const obtenerContexto = async () => {
         return;
       }
 
-      chatActual = seleccionado.id_chat; // ✅ guarda el id del chat abierto
+      chatActual = seleccionado.id_chat;
       console.log("Chat actual:", chatActual);
 
       mostrarHistorial(seleccionado.historial);
@@ -227,6 +232,69 @@ const obtenerContexto = async () => {
         { role: "system", content: context },
         ...seleccionado.historial,
       ];
+    });
+  });
+
+  // ✅ Agregar listeners para eliminar chats
+  document.querySelectorAll(".btn-eliminar").forEach((btn) => {
+    btn.addEventListener("click", async (e) => {
+      e.stopPropagation(); // Evita que se active el click del chat
+
+      const chatId = btn.dataset.id;
+
+      if (!confirm("¿Estás seguro de que deseas eliminar este chat?")) {
+        return;
+      }
+
+      try {
+        const response = await fetch(
+          "http://localhost:3000/api/borrar-contexto",
+          {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ chat_id: chatId }),
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("Error al eliminar el chat");
+        }
+
+        const data = await response.json();
+        console.log("Chat eliminado:", data);
+
+        // ✅ Si el chat eliminado era el activo, resetear
+        if (chatActual == chatId) {
+          chatActual = null;
+          messages = [
+            { role: "system", content: context },
+            {
+              role: "assistant",
+              content:
+                "¡Hola! Soy tu asistente de AuraAI. ¿En qué puedo ayudarte hoy?",
+            },
+          ];
+          contenedorConversacion.innerHTML = `
+            <div class="message message-assistant">
+              <div class="estructura-message">
+                <div class="avatar avatar-bot">
+                  <img src="../assests/img/bot-svgrepo-com.svg" alt="">
+                </div>
+                <div class="message-bubble message-bubble-assistant">
+                  ¡Hola! Soy tu asistente de AuraAI. ¿En qué puedo ayudarte hoy?
+                </div>
+              </div>
+            </div>`;
+        }
+
+        // ✅ Recargar la lista de chats
+        await obtenerContexto();
+      } catch (error) {
+        console.error("Error al eliminar chat:", error);
+        alert("Error al eliminar el chat. Intenta nuevamente.");
+      }
     });
   });
 };
@@ -246,7 +314,6 @@ function mostrarHistorial(historial) {
           </div>
         </div>`;
     } else if (msg.role === "assistant") {
-      // ✅ Renderizar directamente el contenido (ya sea HTML o texto)
       contenedorConversacion.innerHTML += `
         <div class="message message-assistant">
           <div class="estructura-message">
@@ -300,7 +367,6 @@ btnEnviar.addEventListener("click", async (e) => {
     const data = await res.json();
     let mensajeParaMostrar = data.respuesta;
 
-    // 🧠 Intentar parsear si es un string JSON
     if (
       typeof mensajeParaMostrar === "string" &&
       mensajeParaMostrar.trim().startsWith("{")
@@ -312,11 +378,9 @@ btnEnviar.addEventListener("click", async (e) => {
       }
     }
 
-    // 🧠 Determinar qué mostrar
     let contenidoMostrar = "";
 
     if (mensajeParaMostrar && typeof mensajeParaMostrar === "object") {
-      // ✅ Si es GET y tiene contactos, mostrar lista
       if (
         mensajeParaMostrar.operation === "GET" &&
         mensajeParaMostrar.contacts &&
@@ -342,7 +406,6 @@ btnEnviar.addEventListener("click", async (e) => {
           </div>
         `;
       } else {
-        // ✅ Para otros casos, mostrar solo el reason
         contenidoMostrar =
           mensajeParaMostrar.reason || "Operación realizada correctamente";
       }
@@ -350,7 +413,6 @@ btnEnviar.addEventListener("click", async (e) => {
       contenidoMostrar = mensajeParaMostrar;
     }
 
-    // 🤖 Mostrar mensaje del asistente
     contenedorConversacion.innerHTML += `
       <div class="message message-assistant">
         <div class="estructura-message">
@@ -366,20 +428,15 @@ btnEnviar.addEventListener("click", async (e) => {
       behavior: "smooth",
     });
 
-    // ✅ Guardar el contenido formateado que ve el usuario
     messages.push({ role: "assistant", content: contenidoMostrar });
 
-    // ✅ Guardar después de cada intercambio
     await guardarHistorialActual();
-
-    // ✅ Recargar la lista de chats para reflejar cambios
     await obtenerContexto();
   } catch (error) {
     console.error("Error en la consulta:", error);
   }
 });
 
-// ✅ Guardar solo al cerrar sesión
 logoutBtn.addEventListener("click", async () => {
   try {
     await guardarHistorialActual();
@@ -391,7 +448,6 @@ logoutBtn.addEventListener("click", async () => {
   }
 });
 
-// ✅ Botón usuario: abrir menú
 userBtn.addEventListener("click", (e) => {
   e.stopPropagation();
   dropdown.classList.toggle("show");
@@ -403,7 +459,6 @@ document.addEventListener("click", (e) => {
   }
 });
 
-// ✅ Nuevo chat: resetear chatActual
 nuevoChat.addEventListener("click", () => {
   chatActual = null;
   messages = [

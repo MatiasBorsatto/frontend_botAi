@@ -22,7 +22,6 @@ login.addEventListener("submit", async (e) => {
   const data = await res.json();
 
   if (data.message === "Login correcto!") {
-    alert(data.message);
     localStorage.setItem("token", data.token);
     localStorage.setItem("usuario", data.usuarioId);
     window.location.href = "../home/index.html";

@@ -308,15 +308,28 @@ form {
   overflow: hidden;
   text-overflow: ellipsis;
   display: block;
+  margin: 0; /* ✅ Elimina márgenes */
+  font-size: 1rem; /* ✅ Tamaño consistente */
+  font-weight: 500;
 }
 
 .chat-fecha{
   font-size: small;
 }
 
-.cont-datos{
+.chat-fecha {
+  font-size: 0.75rem; /* ✅ Más pequeño que el título */
+  color: var(--muted-foreground);
+  margin: 0;
+  white-space: nowrap; /* ✅ También evita que la fecha se rompa */
+}
+
+.cont-datos {
   display: flex;
   flex-direction: column;
+  flex: 1; 
+  min-width: 0; 
+  overflow: hidden; 
 }
 
 .cont-eliminar,
@@ -326,32 +339,45 @@ form {
   align-items: center;
   width: 2rem;
   height: 2rem;
-  border-radius: 5rem;
-  border: 1px solid black;
+  border-radius: 50%; /* ✅ Cambio de 5rem a 50% */
+  border: 1px solid rgba(255, 255, 255, 0.3);
   background-color: transparent;
   color: white;
+  flex-shrink: 0; /* ✅ No se comprime */
+  transition: 0.2s;
 }
 
 .cont-eliminar button:hover{
   cursor: pointer;
+  background-color: rgba(255, 82, 82, 0.2);
+  border-color: #ff5252;
+  transform: scale(1.1); /* ✅ Efecto de hover */
+}
+
+.cont-eliminar button svg {
+  width: 1.2rem;
+  height: 1.2rem;
 }
 
 .chat-contenedor{
   display: flex;
   justify-content: space-between;
-  gap: .5rem;
-  transition: .1s;
+  align-items: center; /* ✅ Centra verticalmente */
+  gap: 0.5rem;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  transition: 0.1s;
+  border: 1px solid transparent; /* ✅ Borde invisible por defecto */
 }
 
 .chat-contenedor:hover,
 .chat-contenedor:focus{
   border: 1px solid #c8b3ec;
   border-radius: 1rem;
-  padding: .5rem;
   background-color: #a57deb;
-  box-shadow: 0 .1rem .2rem rgb(75, 75, 75);
+  box-shadow: 0 0.1rem 0.2rem rgb(75, 75, 75);
   cursor: pointer;
-  transition: .1s;
+  transition: 0.1s;
 }
 
 .chat-nuevo{

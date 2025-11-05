@@ -1,5 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
 body{
-    background-color: rgb(150, 128, 186);
+    background-color: #a4a4a4;
+    font-family: "Poppins", sans-serif;
+
 }
 
 form{
@@ -11,8 +15,8 @@ form{
     padding: 2rem;
     background-color: rgb(171, 97, 255);
     border-radius: 1rem;
-    border: solid 0.2rem black;
-    margin: 0 auto;
+    border: solid 1px black;
+    box-shadow: 0 .5rem .3rem black;
 }
 
 .cont-gral{
@@ -57,9 +61,12 @@ img{
 	}
 }
 
+
+
 .input{
     display: inherit;
     flex-direction: column;
+    gap: .5rem;
 }
 
 label{
@@ -69,29 +76,34 @@ label{
 input{
     border-radius: 2rem;
     border: black 0.13rem solid;
+    height: 2rem;
+    text-indent: 1rem;
 }
 
 a{
-    font-size: 1.5rem;
-    text-decoration: none;
-    color: blue;
+     text-decoration: none;
+    color: rgb(67, 1, 90);
+    font-size: 1rem;
+
 }
 
 a:hover{
     transition: .5s;
-    color: rgb(31, 27, 34);
-    font-size: 2rem;
+    font-size: 1.2rem;
 }
 
 .button-register{
     border-radius: 2rem;
     width: 50%;
+    height: 2rem;
     margin: 0 auto;
+    border: 1px solid black;
 }
 
-button:hover{
+.button-register:hover{
     box-shadow: 0.4rem 0.4rem 1rem 0.1rem black;
     transition: .5s;
     background-color: black;
     color: white;
+    cursor: pointer;
 }
