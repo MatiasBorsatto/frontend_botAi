@@ -366,7 +366,7 @@ btnEnviar.addEventListener("click", async (e) => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Autentication: `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({ messages }),
     });
